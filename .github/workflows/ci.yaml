@@ -1,0 +1,41 @@
+name: JaCoCo Coverage Check
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-check-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17' # Update to your Java version (e.g., '21')
+          distribution: 'temurin'
+          cache: maven
+
+      # Runs your tests. Quarkus will generate the jacoco.exec file here
+      - name: Build and Run Tests
+        run: mvn -B clean verify
+
+      # Optional: Upload the generated HTML report as an artifact to view in GitHub
+      - name: Upload JaCoCo HTML Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-html-report
+          path: target/jacoco-report/
+
+      # Reads the JaCoCo XML report, fails the build if below threshold,
+      # and adds a summary to the GitHub workflow UI
+      - name: Check Coverage Thresholds
+        uses: Madrapps/jacoco-report@v1.6.1
+        with:
+          paths: target/jacoco-report/jacoco.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 80 # Fails the pipeline if coverage is below 80%
+          min-coverage-changed-files: 80
