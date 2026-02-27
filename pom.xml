@@ -123,6 +123,8 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/jacoco-report</outputDirectory>                        </configuration>
                     </execution>
 <!--                    <execution>-->
 <!--                        <id>jacoco-check</id>-->
