@@ -16,4 +16,6 @@ public interface WarehouseStore {
   Warehouse findByBusinessUnitCode(String buCode);
 
   Warehouse findByBusinessUnitCodeForUpdate(String businessUnitCode);
+
+  SearchWarehouseResult search(SearchWarehouseQuery query);
 }
