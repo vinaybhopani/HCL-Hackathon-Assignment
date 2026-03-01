@@ -9,10 +9,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static jakarta.persistence.LockModeType.*;
 
 @ApplicationScoped
 public class WarehouseRepository implements WarehouseStore, PanacheRepository<DbWarehouse> {
@@ -77,6 +74,7 @@ public class WarehouseRepository implements WarehouseStore, PanacheRepository<Db
   }
 
   @Override
+  @Transactional
   public SearchWarehouseResult search(SearchWarehouseQuery query) {
     String baseQuery = buildBaseQuery(query);
     String countQuery = buildCountQuery(query);
@@ -96,7 +94,6 @@ public class WarehouseRepository implements WarehouseStore, PanacheRepository<Db
             .map(DbWarehouse::toWarehouse)
             .toList();
 
-    // Execute count query
     Query countQueryObj = getEntityManager().createQuery(countQuery, Long.class);
     applyQueryParameters(countQueryObj, query);
     long totalCount = (long) countQueryObj.getSingleResult();
@@ -109,7 +106,7 @@ public class WarehouseRepository implements WarehouseStore, PanacheRepository<Db
   private String buildBaseQuery(SearchWarehouseQuery query) {
     StringBuilder sql = new StringBuilder("SELECT w FROM DbWarehouse w WHERE w.archivedAt IS NULL");
 
-    if (query.getLocation() != null && !query.getLocation().isEmpty()) {
+    if (query.getLocation() != null) {
       sql.append(" AND w.location = :location");
     }
     if (query.getMinCapacity() != null) {

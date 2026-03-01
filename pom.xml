@@ -56,6 +56,11 @@
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-jacoco</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit5-mockito</artifactId>
             <scope>test</scope>
         </dependency>
@@ -119,7 +124,7 @@
                             <goal>prepare-agent</goal>
                         </goals>
                         <configuration>
-                            <destFile>${project.build.directory}/jacoco.exec</destFile>
+                            <destFile>${project.build.directory}/jacoco-quarkus.exec</destFile>
                             <append>true</append>
                         </configuration>
                     </execution><execution>
@@ -129,7 +134,7 @@
                         <goal>prepare-agent-integration</goal>
                     </goals>
                     <configuration>
-                        <destFile>${project.build.directory}/jacoco.exec</destFile>
+                        <destFile>${project.build.directory}/jacoco-quarkus.exec</destFile>
                         <append>true</append>
                     </configuration>
                 </execution>
@@ -140,7 +145,7 @@
                             <goal>report</goal>
                         </goals>
                         <configuration>
-                            <dataFile>${project.build.directory}/jacoco.exec</dataFile>
+                            <dataFile>${project.build.directory}/jacoco-quarkus.exec</dataFile>
                             <outputDirectory>${project.build.directory}/jacoco-report</outputDirectory>
                         </configuration>
                     </execution>
@@ -156,35 +161,13 @@
                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                         <maven.home>${maven.home}</maven.home>
                         <net.bytebuddy.experimental>true</net.bytebuddy.experimental>
+                        <quarkus.jacoco.data-file>${project.build.directory}/jacoco-quarkus.exec</quarkus.jacoco.data-file>
+                        <quarkus.jacoco.reuse-data-file>true</quarkus.jacoco.reuse-data-file>
+                        <quarkus.jacoco.report-location>${project.build.directory}/jacoco-report</quarkus.jacoco.report-location>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.1.2</version>
-                <configuration>
-                    <argLine>${argLine}</argLine>
-<!--                    <excludes>-->
-<!--                        <exclude>WarehouseEndpointIT.java</exclude>-->
-<!--                        <exclude>WarehouseSearchIT.java</exclude>-->
-<!--                    </excludes>-->
-                    <systemPropertyVariables>
-                        <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-                        <maven.home>${maven.home}</maven.home>
-                        <net.bytebuddy.experimental>true</net.bytebuddy.experimental>
-                        <quarkus.profile>prod</quarkus.profile>
-                    </systemPropertyVariables>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+
 
 
 

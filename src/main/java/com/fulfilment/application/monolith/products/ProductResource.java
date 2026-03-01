@@ -6,19 +6,13 @@ import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
-import java.util.List;
 import org.jboss.logging.Logger;
+
+import java.util.List;
 
 @Path("product")
 @ApplicationScoped
@@ -52,6 +46,9 @@ public class ProductResource {
       throw new WebApplicationException("Id was invalidly set on request.", 422);
     }
 
+    if (productRepository.find("name", product.name).firstResult() != null) {
+      throw new WebApplicationException("Product with name " + product.name + " already exists.", 409);
+    }
     productRepository.persist(product);
     return Response.ok(product).status(201).build();
   }

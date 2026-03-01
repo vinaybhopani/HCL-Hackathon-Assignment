@@ -36,8 +36,5 @@ public class SearchWarehouseResult {
     return pageSize;
   }
 
-  public long getTotalPages() {
-    return (totalCount + pageSize - 1) / pageSize;
-  }
 }
 
